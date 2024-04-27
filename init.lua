@@ -244,7 +244,7 @@ require('lazy').setup({
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
   --    require('gitsigns').setup({ ... })
   --
-  -- See `:help gitsigns` to understand what the configuration keys do
+  --   See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -732,21 +732,11 @@ require('lazy').setup({
     end,
   },
   {
-    'rebelot/kanagawa.nvim',
+    'navarasu/onedark.nvim',
     init = function()
-      vim.cmd.colorscheme 'kanagawa-dragon'
+      vim.cmd.colorscheme 'onedark'
     end,
   },
-  --
-  --  {
-  --    'fneu/breezy',
-  --    init = function()
-  --      vim.opt.background = 'light'
-  --      vim.opt.termguicolors = true
-  --      vim.cmd.colorscheme 'breezy'
-  --    end,
-  --  },
-  --
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
