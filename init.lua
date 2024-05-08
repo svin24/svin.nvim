@@ -540,19 +540,12 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         gopls = {},
-        -- pyright = {},
+        jq = {},
         rust_analyzer = {},
         zls = {},
-        -- jdtls = {},
-        -- java_language_server = {},
-        -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-        --
-        -- Some languages (like typescript) have entire language plugins that can be useful:
-        --    https://github.com/pmizio/typescript-tools.nvim
-        --
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
-        --
+        pyright = {},
+        tsserver = {},
+        bashls = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -731,10 +724,18 @@ require('lazy').setup({
       }
     end,
   },
+  --  {
+  --    'navarasu/onedark.nvim',
+  --    init = function()
+  --      vim.cmd.colorscheme 'onedark'
+  --    end,
+  --  },
   {
-    'navarasu/onedark.nvim',
+    'tanvirtin/monokai.nvim',
     init = function()
-      vim.cmd.colorscheme 'onedark'
+      -- vim.o.background = 'dark'
+      vim.cmd.syntax 'on'
+      vim.cmd.colorscheme 'monokai_pro'
     end,
   },
   -- Highlight todo, notes, etc in comments
