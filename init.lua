@@ -83,7 +83,9 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
-
+if vim.g.neovide then
+  vim.g.neovide_cursor_animation_length = 0
+end
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -736,6 +738,22 @@ require('lazy').setup({
       -- vim.o.background = 'dark'
       vim.cmd.syntax 'on'
       vim.cmd.colorscheme 'monokai_pro'
+    end,
+  },
+  {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup({ '*' }, {
+        RGB = true, -- #RGB hex codes
+        RRGGBB = true, -- #RRGGBB hex codes
+        names = true, -- "Name" codes like Blue
+        RRGGBBAA = true, -- #RRGGBBAA hex codes
+        rgb_fn = true, -- CSS rgb() and rgba() functions
+        hsl_fn = true, -- CSS hsl() and hsla() functions
+        css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+        css_fn = true, -- Enable all CSS *functions*: rgb_fn, hsl_fn
+        mode = 'background', -- Set the display mode.
+      })
     end,
   },
   -- Highlight todo, notes, etc in comments
