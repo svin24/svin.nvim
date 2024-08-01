@@ -94,7 +94,7 @@ vim.g.maplocalleader = " "
 
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
-
+vim.o.termguicolors = true
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -279,15 +279,17 @@ require("lazy").setup({
 		"folke/which-key.nvim",
 		event = "VimEnter", -- Sets the loading event to 'VimEnter'
 		config = function() -- This is the function that runs, AFTER loading
-			require("which-key").setup()
-
-			-- Document existing key chains
-			require("which-key").register({
-				["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-				["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
-				["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-				["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
-				["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
+			require("which-key").setup({
+				{ "<leader>c", group = "[C]ode" },
+				{ "<leader>c_", hidden = true },
+				{ "<leader>d", group = "[D]ocument" },
+				{ "<leader>d_", hidden = true },
+				{ "<leader>r", group = "[R]ename" },
+				{ "<leader>r_", hidden = true },
+				{ "<leader>s", group = "[S]earch" },
+				{ "<leader>s_", hidden = true },
+				{ "<leader>w", group = "[W]orkspace" },
+				{ "<leader>w_", hidden = true },
 			})
 		end,
 	},
@@ -730,23 +732,15 @@ require("lazy").setup({
 			})
 		end,
 	},
-	--  {
-	--    'navarasu/onedark.nvim',
-	--    init = function()
-	--      vim.cmd.colorscheme 'onedark'
-	--    end,
-	--  },
 	{
-		"tanvirtin/monokai.nvim",
+		"loctvl842/monokai-pro.nvim",
 		init = function()
-			-- vim.o.background = 'dark'
-			vim.cmd.syntax("on")
-			vim.cmd.colorscheme("monokai_pro")
+			vim.cmd.colorscheme("monokai-pro")
 		end,
 		config = function()
-			require("monokai").setup({
-				palette = {},
-				custom_hlgroups = {},
+			require("monokai-pro").setup({
+				transparent_background = false,
+				terminal_colors = true,
 			})
 		end,
 	},
