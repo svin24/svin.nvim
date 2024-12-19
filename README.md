@@ -25,7 +25,7 @@ Clone svin.nvim:
 <details><summary> Linux and Mac </summary>
 
 ```sh
-git clone https://github.com/svin24/svin.nvim.git "/nvim"${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
+git clone https://github.com/svin24/svin.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
 </details>
