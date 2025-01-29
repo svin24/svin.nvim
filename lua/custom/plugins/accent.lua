@@ -1,5 +1,6 @@
 return {
-  dir = vim.fn.expand '$HOME' .. '/Source/accent.nvim/',
+  'svin24/accent.nvim',
+  -- dir = vim.fn.expand '$HOME' .. '/Source/accent.nvim/',
   config = function()
     require('accent').setup {
       -- color to use
