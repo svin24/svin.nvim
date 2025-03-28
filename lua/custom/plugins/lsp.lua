@@ -142,6 +142,16 @@ return { -- LSP Configuration & Plugins
           },
         },
       },
+      nil_ls = {
+        settings = {
+          ['nil'] = {
+            testSetting = 42,
+            formatting = {
+              command = { 'nixpkgs-fmt' },
+            },
+          },
+        },
+      },
     }
 
     -- Ensure the servers and tools above are installed
