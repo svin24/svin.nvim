@@ -4,7 +4,7 @@ return {
   config = function()
     require('accent').setup {
       -- color to use
-      accent_color = 'yellow',
+      accent_color = 'orange',
 
       -- makes the background and some text colours darker.
       accent_darken = false,
