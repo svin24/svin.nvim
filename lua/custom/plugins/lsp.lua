@@ -206,11 +206,26 @@ return { -- LSP Configuration & Plugins
     require('mason').setup()
 
     -- Use mason-tool-installer to ensure the servers and other tools are installed.
-    local ensure_installed = vim.tbl_keys(servers)
-    vim.list_extend(ensure_installed, {
-      'stylua', -- Formatter for Lua
-    })
-    require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+    require('mason-tool-installer').setup {
+      ensure_installed = {
+        {
+          'nil_ls',
+          condition = function()
+            return vim.fn.executable 'nix' == 1
+          end,
+        },
+        {
+          'gopls',
+          condition = function()
+            return vim.fn.executable 'go' == 1
+          end,
+        },
+
+        'stylua',
+        'clangd',
+        'lua_ls',
+      },
+    }
 
     -- Configure mason-lspconfig to use the servers configured above.
     -- This is the bridge between mason and nvim-lspconfig.
