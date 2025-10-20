@@ -73,7 +73,7 @@ MiniDeps.setup({
 	},
 })
 
-MiniDeps.add('svin24/accent.nvim')
+-- MiniDeps.add('svin24/accent.nvim')
 MiniDeps.add('folke/which-key.nvim')
 MiniDeps.add({
 	source = 'nvim-mini/mini.nvim',
@@ -96,15 +96,14 @@ MiniDeps.add({
 -- ========================================================================== --
 
 -- Personal theme
-require('accent').setup({
-	accent_color = 'orange',
-	accent_darken = false,
-	invert_status = false,
-	auto_cwd_color = false,
-	no_bg = true,
-}
-)
-vim.cmd.colorscheme('accent')
+-- require('accent').setup({
+-- 	accent_color = 'orange',
+-- 	accent_darken = false,
+-- 	invert_status = false,
+-- 	auto_cwd_color = false,
+-- 	no_bg = true,
+-- })
+vim.cmd.colorscheme('miniautumn')
 
 -- See :help MiniIcons.config
 -- Change style to 'glyph' if you have a font with fancy icons
@@ -317,3 +316,8 @@ vim.lsp.config('nil_ls', {
 vim.lsp.enable('nil_ls')
 vim.lsp.enable('lua_ls')
 vim.lsp.enable('clangd')
+vim.lsp.enable('gopls')
+vim.lsp.enable('intelephense')
+vim.lsp.enable('rust_analyzer')
+vim.lsp.enable('denols')
+vim.lsp.enable('basedpyright')

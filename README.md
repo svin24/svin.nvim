@@ -4,7 +4,7 @@ Lightweight configuration focused on providing "basic features" with little boil
 
 ## Requirements
 
-* Neovim v0.9.5 or greater.
+* Neovim v0.11 or greater.
 * git.
 * [tree-sitter CLI](https://github.com/tree-sitter/tree-sitter).
 * A `C` compiler. Can be `gcc`, `tcc` or `zig`.
@@ -18,7 +18,7 @@ If you need a `C` compiler then `zig` is the easiest to install. It's available 
 
 ## Installation
 
-* I recommend installing Neovim's [latest stable version](https://vonheikemen.github.io/learn-nvim/101/installation.html). Or at least Neovim v0.9.
+* I recommend installing Neovim's [latest stable version](https://vonheikemen.github.io/learn-nvim/101/installation.html).
 
 * Backup your existing configuration if you have one.
 
