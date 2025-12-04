@@ -73,7 +73,6 @@ MiniDeps.setup({
 	},
 })
 
--- MiniDeps.add('svin24/accent.nvim')
 MiniDeps.add('folke/which-key.nvim')
 MiniDeps.add({
 	source = 'nvim-mini/mini.nvim',
@@ -96,14 +95,15 @@ MiniDeps.add({
 -- ========================================================================== --
 
 -- Personal theme
--- require('accent').setup({
--- 	accent_color = 'orange',
--- 	accent_darken = false,
--- 	invert_status = false,
--- 	auto_cwd_color = false,
--- 	no_bg = true,
--- })
-vim.cmd.colorscheme('miniautumn')
+MiniDeps.add('svin24/accent.nvim')
+require('accent').setup({
+	accent_color = 'orange',
+	accent_darken = false,
+	invert_status = false,
+	auto_cwd_color = false,
+	no_bg = true,
+})
+vim.cmd.colorscheme('accent')
 
 -- See :help MiniIcons.config
 -- Change style to 'glyph' if you have a font with fancy icons
@@ -157,7 +157,7 @@ vim.keymap.set('n', '<leader>fd', '<cmd>Pick diagnostic<cr>', { desc = 'Search d
 vim.keymap.set('n', '<leader>fs', '<cmd>Pick buf_lines<cr>', { desc = 'Buffer local search' })
 
 -- See :help MiniStatusline.config
-require('mini.statusline').setup({})
+-- require('mini.statusline').setup({})
 
 -- See :help MiniExtra
 require('mini.extra').setup({})
