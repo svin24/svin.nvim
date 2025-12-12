@@ -98,6 +98,12 @@ MiniDeps.add({
 MiniDeps.add('svin24/accent.nvim')
 require('accent').setup({
 	accent_color = 'orange',
+  custom_accent = {
+    fg = '#009CD9', -- Hex foreground
+    bg = '#0077A6', -- Hex background
+    ctermfg = 196, -- Terminal foreground
+    ctermbg = 124, -- Terminal background
+  },
 	accent_darken = false,
 	invert_status = false,
 	auto_cwd_color = false,
@@ -117,11 +123,6 @@ require('mini.comment').setup({})
 
 -- See :help MiniSurround.config
 require('mini.surround').setup({})
-
--- See :help MiniNotify.config
-require('mini.notify').setup({
-	lsp_progress = { enable = false },
-})
 
 -- See :help MiniBufremove.config
 require('mini.bufremove').setup({})
@@ -184,7 +185,15 @@ require('which-key').setup({
 require('which-key').add({
 	{ '<leader>f', group = 'Fuzzy Find' },
 	{ '<leader>b', group = 'Buffer' },
+	{ '<leader>l', group = 'LSP' },
+	{ '<leader>d', group = 'Diagnostics' },
+	{ 'g', group = 'Goto/LSP' },
 })
+
+-- Quick diagnostic navigation
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Prev diagnostic' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set('n', '<leader>ld', vim.diagnostic.open_float, { desc = 'Line diagnostics' })
 
 -- Treesitter setup
 local ts_parsers = { 'lua', 'vim', 'vimdoc', 'c', 'query' }
@@ -237,20 +246,25 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
 		vim.keymap.set('n', 'grd', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
 		vim.keymap.set({ 'n', 'x' }, 'gq', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+		vim.keymap.set('n', '<leader>lf', function()
+			vim.lsp.buf.format({ async = true })
+		end, vim.tbl_extend('keep', { desc = 'Format buffer' }, opts))
+		vim.keymap.set('n', '<leader>la', '<cmd>lua vim.lsp.buf.code_action()<cr>', vim.tbl_extend('keep', { desc = 'Code action' }, opts))
+		vim.keymap.set('n', '<leader>lr', '<cmd>lua vim.lsp.buf.rename()<cr>', vim.tbl_extend('keep', { desc = 'Rename symbol' }, opts))
 	end,
 })
 
 -- Auto-format on save
 
-vim.api.nvim_create_autocmd('BufWritePre', {
-	callback = function(event)
-		-- Check if there's an LSP client attached
-		local clients = vim.lsp.get_clients({ bufnr = event.buf })
-		if #clients > 0 then
-			vim.lsp.buf.format({ async = false, bufnr = event.buf })
-		end
-	end,
-})
+-- vim.api.nvim_create_autocmd('BufWritePre', {
+-- 	callback = function(event)
+-- 		-- Check if there's an LSP client attached
+-- 		local clients = vim.lsp.get_clients({ bufnr = event.buf })
+-- 		if #clients > 0 then
+-- 			vim.lsp.buf.format({ async = false, bufnr = event.buf })
+-- 		end
+-- 	end,
+-- })
 
 -- ======================================================================= --
 -- ==                         LSP CONFIGURATION                         == --
