@@ -12,8 +12,8 @@
   ];
 
   clipboard.providers.wl-copy.enable = true;
-  
-	dependencies = {
+
+  dependencies = {
     tree-sitter.enable = true;
     gcc.enable = true;
     curl.enable = true;
