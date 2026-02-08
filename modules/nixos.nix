@@ -6,6 +6,6 @@
   ];
 
   environment.shellAliases = {
-    neovim = "vim";
+    vim = "nvim";
   };
 }
