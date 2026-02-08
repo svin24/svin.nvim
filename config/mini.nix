@@ -1,4 +1,25 @@
 {
+  plugins = {
+    mini-icons = {
+      enable = true;
+      settings.style = "ascii";
+    };
+
+    mini-ai = {
+      enable = true;
+      settings.n_lines = 500;
+    };
+
+    mini-comment.enable = true;
+    mini-surround.enable = true;
+    mini-bufremove.enable = true;
+    mini-files.enable = true;
+    mini-pick.enable = true;
+    mini-extra.enable = true;
+    mini-snippets.enable = true;
+    mini-completion.enable = true;
+  };
+
   keymaps = [
     {
       mode = "n";
@@ -57,17 +78,4 @@
       options.desc = "Buffer local search";
     }
   ];
-
-  extraConfigLua = ''
-    require('mini.icons').setup({ style = 'ascii' })
-    require('mini.ai').setup({ n_lines = 500 })
-    require('mini.comment').setup({})
-    require('mini.surround').setup({})
-    require('mini.bufremove').setup({})
-    require('mini.files').setup({})
-    require('mini.pick').setup({})
-    require('mini.extra').setup({})
-    require('mini.snippets').setup({})
-    require('mini.completion').setup({})
-  '';
 }

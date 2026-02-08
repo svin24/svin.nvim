@@ -1,4 +1,13 @@
+{ pkgs, inputs, ... }:
 {
+  extraPlugins = [
+    (pkgs.vimUtils.buildVimPlugin {
+      pname = "accent.nvim";
+      version = inputs.accent-nvim.lastModifiedDate or "dirty";
+      src = inputs.accent-nvim;
+    })
+  ];
+
   extraConfigLua = ''
     -- Personal theme
     require('accent').setup({

@@ -1,5 +1,7 @@
 { pkgs, ... }:
 {
+  plugins.lspconfig.enable = true;
+
   lsp.keymaps = [
     {
       mode = "n";
