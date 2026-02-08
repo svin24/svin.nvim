@@ -51,5 +51,9 @@
             default = nvim;
           };
         };
+
+      flake = {
+        nixosModules.default = import ./modules/nixos.nix { inherit inputs; };
+      };
     };
 }
