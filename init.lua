@@ -31,62 +31,62 @@ vim.keymap.set({ 'n', 'x' }, 'gp', '"+p', { desc = 'Paste clipboard content' })
 -- ========================================================================== --
 
 local mini = {}
-
 mini.branch = 'main'
-mini.packpath = vim.fn.stdpath('data') .. '/site'
 
-function mini.require_deps()
-	local uv = vim.uv or vim.loop
-	local mini_path = mini.packpath .. '/pack/deps/start/mini.nvim'
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 
-	if not uv.fs_stat(mini_path) then
-		print('Installing mini.nvim....')
-		vim.fn.system({
-			'git',
-			'clone',
-			'--filter=blob:none',
-			'https://github.com/nvim-mini/mini.nvim',
-			string.format('--branch=%s', mini.branch),
-			mini_path
-		})
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+	print('Installing lazy.nvim....')
 
-		vim.cmd('packadd mini.nvim | helptags ALL')
+	vim.fn.system({
+		'git',
+		'clone',
+		'--filter=blob:none',
+		'https://github.com/folke/lazy.nvim.git',
+		'--branch=stable',
+		lazypath
+	})
+
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo({
+			{ 'Failed to install lazy.nvim.\n', 'ErrorMsg' },
+			{ vim.fn.system('git --version'),   'WarningMsg' },
+			{ '\nPress any key to exit...' },
+		}, true, {})
+		vim.fn.getchar()
+		os.exit(1)
 	end
-
-	local ok, deps = pcall(require, 'mini.deps')
-	if not ok then
-		return {}
-	end
-
-	return deps
 end
 
-local MiniDeps = mini.require_deps()
-if not MiniDeps.setup then
-	return
-end
+vim.opt.rtp:prepend(lazypath)
 
--- See :help MiniDeps.config
-MiniDeps.setup({
-	path = {
-		package = mini.packpath,
+require('lazy').setup({
+	'folke/which-key.nvim',
+	{
+		'nvim-mini/mini.nvim',
+		branch = mini.branch,
 	},
-})
-
-MiniDeps.add('folke/which-key.nvim')
-MiniDeps.add({
-	source = 'nvim-mini/mini.nvim',
-	checkout = mini.branch,
-})
-
-MiniDeps.add('neovim/nvim-lspconfig')
-MiniDeps.add({
-	source = 'nvim-treesitter/nvim-treesitter',
-	checkout = 'main',
-	hooks = {
-		post_checkout = function()
-			vim.cmd.TSUpdate()
-		end,
+	'neovim/nvim-lspconfig',
+	{
+		'williamboman/mason.nvim',
+		build = ':MasonUpdate',
+	},
+	'williamboman/mason-lspconfig.nvim',
+	'nvim-lua/plenary.nvim',
+	'nvim-telescope/telescope.nvim',
+	{
+		'Saghen/blink.cmp',
+		version = '1.*',
+	},
+	{
+		'nvim-treesitter/nvim-treesitter',
+		branch = 'main',
+		build = ':TSUpdate',
+	},
+	'svin24/accent.nvim',
+}, {
+	defaults = {
+		lazy = false,
 	},
 })
 
@@ -95,25 +95,20 @@ MiniDeps.add({
 -- ========================================================================== --
 
 -- Personal theme
-MiniDeps.add('svin24/accent.nvim')
 require('accent').setup({
-	accent_color = 'orange',
-  custom_accent = {
-    fg = '#009CD9', -- Hex foreground
-    bg = '#0077A6', -- Hex background
-    ctermfg = 196, -- Terminal foreground
-    ctermbg = 124, -- Terminal background
-  },
+	accent_color = 'cyan',
+	-- custom_accent = {
+	-- 	fg = '#009CD9', -- Hex foreground
+	-- 	bg = '#0077A6', -- Hex background
+	-- 	ctermfg = 196,  -- Terminal foreground
+	-- 	ctermbg = 124,  -- Terminal background
+	-- },
 	accent_darken = false,
 	invert_status = false,
 	auto_cwd_color = false,
 	no_bg = true,
 })
 vim.cmd.colorscheme('accent')
-
--- See :help MiniIcons.config
--- Change style to 'glyph' if you have a font with fancy icons
-require('mini.icons').setup({ style = 'ascii' })
 
 -- See :help MiniAi-textobject-builtin
 require('mini.ai').setup({ n_lines = 500 })
@@ -130,44 +125,47 @@ require('mini.bufremove').setup({})
 -- Close buffer and preserve window layout
 vim.keymap.set('n', '<leader>bc', '<cmd>lua pcall(MiniBufremove.delete)<cr>', { desc = 'Close buffer' })
 
--- See :help MiniFiles.config
-local mini_files = require('mini.files')
-mini_files.setup({})
+-- Open netrw explorer
+vim.keymap.set('n', '<leader>e', '<cmd>Explore<cr>', { desc = 'File explorer' })
 
--- Toggle file explorer
--- See :help MiniFiles-navigation
-vim.keymap.set('n', '<leader>e', function()
-	if mini_files.close() then
-		return
-	end
+require('telescope').setup({})
+local telescope_builtin = require('telescope.builtin')
 
-	mini_files.open()
-end, { desc = 'File explorer' })
-
--- See :help MiniPick.config
-require('mini.pick').setup({})
-
--- See available pickers
--- :help MiniPick.builtin
--- :help MiniExtra.pickers
-vim.keymap.set('n', '<leader>?', '<cmd>Pick oldfiles<cr>', { desc = 'Search file history' })
-vim.keymap.set('n', '<leader><space>', '<cmd>Pick buffers<cr>', { desc = 'Search open files' })
-vim.keymap.set('n', '<leader>ff', '<cmd>Pick files<cr>', { desc = 'Search all files' })
-vim.keymap.set('n', '<leader>fg', '<cmd>Pick grep_live<cr>', { desc = 'Search in project' })
-vim.keymap.set('n', '<leader>fd', '<cmd>Pick diagnostic<cr>', { desc = 'Search diagnostics' })
-vim.keymap.set('n', '<leader>fs', '<cmd>Pick buf_lines<cr>', { desc = 'Buffer local search' })
+vim.keymap.set('n', '<leader>?', telescope_builtin.oldfiles, { desc = 'Search file history' })
+vim.keymap.set('n', '<leader><space>', telescope_builtin.buffers, { desc = 'Search open files' })
+vim.keymap.set('n', '<leader>sf', telescope_builtin.find_files, { desc = 'Search all files' })
+vim.keymap.set('n', '<leader>sg', telescope_builtin.live_grep, { desc = 'Search in project' })
+vim.keymap.set('n', '<leader>sd', telescope_builtin.diagnostics, { desc = 'Search diagnostics' })
+vim.keymap.set('n', '<leader>ss', telescope_builtin.current_buffer_fuzzy_find, { desc = 'Buffer local search' })
 
 -- See :help MiniStatusline.config
 -- require('mini.statusline').setup({})
 
--- See :help MiniExtra
-require('mini.extra').setup({})
-
 -- See :help MiniSnippets.config
 require('mini.snippets').setup({})
 
--- See :help MiniCompletion.config
-require('mini.completion').setup({})
+require('blink.cmp').setup({
+	keymap = {
+		preset = 'default',
+		['<CR>'] = { 'accept', 'fallback' },
+	},
+	completion = {
+		list = {
+			selection = {
+				preselect = true,
+				auto_insert = false,
+			},
+		},
+		menu = {
+			draw = {
+				columns = {
+					{ 'label', 'label_description', gap = 1 },
+					{ 'kind' },
+				},
+			},
+		},
+	},
+})
 
 -- See :help which-key.nvim-which-key-setup
 require('which-key').setup({
@@ -187,12 +185,16 @@ require('which-key').add({
 	{ '<leader>b', group = 'Buffer' },
 	{ '<leader>l', group = 'LSP' },
 	{ '<leader>d', group = 'Diagnostics' },
-	{ 'g', group = 'Goto/LSP' },
+	{ 'g',         group = 'Goto/LSP' },
 })
 
 -- Quick diagnostic navigation
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Prev diagnostic' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set('n', '[d', function()
+	vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = 'Prev diagnostic' })
+vim.keymap.set('n', ']d', function()
+	vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = 'Next diagnostic' })
 vim.keymap.set('n', '<leader>ld', vim.diagnostic.open_float, { desc = 'Line diagnostics' })
 
 -- Treesitter setup
@@ -249,22 +251,26 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>lf', function()
 			vim.lsp.buf.format({ async = true })
 		end, vim.tbl_extend('keep', { desc = 'Format buffer' }, opts))
-		vim.keymap.set('n', '<leader>la', '<cmd>lua vim.lsp.buf.code_action()<cr>', vim.tbl_extend('keep', { desc = 'Code action' }, opts))
-		vim.keymap.set('n', '<leader>lr', '<cmd>lua vim.lsp.buf.rename()<cr>', vim.tbl_extend('keep', { desc = 'Rename symbol' }, opts))
+		vim.keymap.set('n', '<leader>la', '<cmd>lua vim.lsp.buf.code_action()<cr>',
+			vim.tbl_extend('keep', { desc = 'Code action' }, opts))
+		vim.keymap.set('n', '<leader>lr', '<cmd>lua vim.lsp.buf.rename()<cr>',
+			vim.tbl_extend('keep', { desc = 'Rename symbol' }, opts))
 	end,
 })
 
 -- Auto-format on save
 
--- vim.api.nvim_create_autocmd('BufWritePre', {
--- 	callback = function(event)
--- 		-- Check if there's an LSP client attached
--- 		local clients = vim.lsp.get_clients({ bufnr = event.buf })
--- 		if #clients > 0 then
--- 			vim.lsp.buf.format({ async = false, bufnr = event.buf })
--- 		end
--- 	end,
--- })
+if not vim.g.vscode then
+	vim.api.nvim_create_autocmd('BufWritePre', {
+		callback = function(event)
+			-- Check if there's an LSP client attached
+			local clients = vim.lsp.get_clients({ bufnr = event.buf })
+			if #clients > 0 then
+				vim.lsp.buf.format({ async = false, bufnr = event.buf })
+			end
+		end,
+	})
+end
 
 -- ======================================================================= --
 -- ==                         LSP CONFIGURATION                         == --
@@ -327,11 +333,19 @@ vim.lsp.config('nil_ls', {
 	}
 })
 
-vim.lsp.enable('nil_ls')
-vim.lsp.enable('lua_ls')
-vim.lsp.enable('clangd')
-vim.lsp.enable('gopls')
-vim.lsp.enable('intelephense')
-vim.lsp.enable('rust_analyzer')
-vim.lsp.enable('denols')
-vim.lsp.enable('basedpyright')
+local lsp_servers = {
+	'nil_ls',
+	'lua_ls',
+	'clangd',
+	'gopls',
+	'intelephense',
+	'rust_analyzer',
+	'denols',
+	'basedpyright',
+}
+
+require('mason').setup({})
+require('mason-lspconfig').setup({
+	ensure_installed = lsp_servers,
+	automatic_enable = lsp_servers,
+})
