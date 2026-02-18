@@ -344,8 +344,57 @@ local lsp_servers = {
 	'basedpyright',
 }
 
+local auto_install_servers = {
+	'lua_ls',
+	'clangd',
+}
+
 require('mason').setup({})
-require('mason-lspconfig').setup({
-	ensure_installed = lsp_servers,
+local mason_lspconfig = require('mason-lspconfig')
+mason_lspconfig.setup({
+	ensure_installed = auto_install_servers,
 	automatic_enable = lsp_servers,
 })
+
+-- Auto-install configured LSPs when a matching filetype is opened.
+do
+	local registry = require('mason-registry')
+	local mappings = mason_lspconfig.get_mappings()
+	local filetypes = mappings.filetypes
+	local lsp_to_package = mappings.lspconfig_to_package
+	local configured_servers = {}
+	local installing = {}
+
+	for _, server in ipairs(lsp_servers) do
+		configured_servers[server] = true
+	end
+
+	vim.api.nvim_create_autocmd('FileType', {
+		group = vim.api.nvim_create_augroup('MasonLspInstallOnFiletype', { clear = true }),
+		callback = function(event)
+			local servers = filetypes[event.match]
+			if not servers then
+				return
+			end
+
+			for _, server in ipairs(servers) do
+				if configured_servers[server] then
+					local package_name = lsp_to_package[server]
+					if package_name and not installing[package_name] and not registry.is_installed(package_name) then
+						local ok, pkg = pcall(registry.get_package, package_name)
+						if ok then
+							installing[package_name] = true
+							pkg:install()
+							pkg:on('install:success', function()
+								installing[package_name] = nil
+							end)
+							pkg:on('install:failed', function()
+								installing[package_name] = nil
+							end)
+						end
+					end
+				end
+			end
+		end,
+	})
+end
