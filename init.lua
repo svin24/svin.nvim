@@ -347,18 +347,12 @@ vim.lsp.config('nil_ls', {
 })
 
 local lsp_servers = {
-	'nil_ls',
 	'lua_ls',
 	'clangd',
-	'gopls',
-	'intelephense',
-	'rust_analyzer',
-	'denols',
-	'basedpyright',
 }
 
 require('mason').setup({})
 require('mason-lspconfig').setup({
 	ensure_installed = lsp_servers,
-	automatic_enable = lsp_servers,
+	automatic_enable = true,
 })
