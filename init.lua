@@ -149,6 +149,19 @@ require('blink.cmp').setup({
 		preset = 'default',
 		['<CR>'] = { 'accept', 'fallback' },
 	},
+	sources = {
+		default = { 'lsp', 'path', 'snippets', 'buffer' },
+		providers = {
+			path = {
+				opts = {
+					-- Optional: make path completion relative to project cwd
+					get_cwd = function(_)
+						return vim.fn.getcwd()
+					end,
+				},
+			},
+		},
+	},
 	completion = {
 		list = {
 			selection = {
