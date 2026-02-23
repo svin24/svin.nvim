@@ -69,7 +69,12 @@ require('lazy').setup({
 	'neovim/nvim-lspconfig',
 	{
 		'williamboman/mason.nvim',
-		build = ':MasonUpdate',
+		build = function()
+			-- `:MasonUpdate` is only available after mason.setup() defines user commands.
+			-- Use the Lua API in build to avoid command timing issues.
+			require('mason').setup({})
+			require('mason-registry').refresh()
+		end,
 	},
 	'williamboman/mason-lspconfig.nvim',
 	'nvim-lua/plenary.nvim',
