@@ -88,7 +88,6 @@ require('lazy').setup({
 		branch = 'main',
 		build = ':TSUpdate',
 	},
-	'svin24/accent.nvim',
 }, {
 	defaults = {
 		lazy = false,
@@ -99,21 +98,7 @@ require('lazy').setup({
 -- ==                         PLUGIN CONFIGURATION                         == --
 -- ========================================================================== --
 
--- Personal theme
-require('accent').setup({
-	accent_color = 'cyan',
-	-- custom_accent = {
-	-- 	fg = '#009CD9', -- Hex foreground
-	-- 	bg = '#0077A6', -- Hex background
-	-- 	ctermfg = 196,  -- Terminal foreground
-	-- 	ctermbg = 124,  -- Terminal background
-	-- },
-	accent_darken = false,
-	invert_status = false,
-	auto_cwd_color = false,
-	no_bg = true,
-})
-vim.cmd.colorscheme('accent')
+vim.cmd.colorscheme('habamax')
 
 -- See :help MiniAi-textobject-builtin
 require('mini.ai').setup({ n_lines = 500 })
