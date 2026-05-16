@@ -19,12 +19,13 @@ vim.o.timeoutlen = 300
 vim.o.signcolumn = 'yes'
 vim.o.undofile = true
 vim.o.mouse = 'a'
+vim.opt.clipboard = "unnamedplus"
 -- Space as leader key
 vim.g.mapleader = ' '
 
 -- Basic clipboard interaction
-vim.keymap.set({ 'n', 'x' }, 'gy', '"+y', { desc = 'Copy to clipboard' })
-vim.keymap.set({ 'n', 'x' }, 'gp', '"+p', { desc = 'Paste clipboard content' })
+--vim.keymap.set({ 'n', 'x' }, 'gy', '"+y', { desc = 'Copy to clipboard' })
+--vim.keymap.set({ 'n', 'x' }, 'gp', '"+p', { desc = 'Paste clipboard content' })
 
 -- ========================================================================== --
 -- ==                               PLUGINS                                == --
