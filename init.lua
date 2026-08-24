@@ -13,7 +13,8 @@ vim.o.hlsearch = false
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.showmode = false
-vim.o.termguicolors = true
+-- Inherit terminal ANSI palette (Goal A). Pair with colorscheme "terminal".
+vim.o.termguicolors = false
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 vim.o.signcolumn = 'yes'
@@ -99,7 +100,8 @@ require('lazy').setup({
 -- ==                         PLUGIN CONFIGURATION                         == --
 -- ========================================================================== --
 
-vim.cmd.colorscheme('habamax')
+-- 16-color scheme: uses cterm 0–15 from the terminal emulator.
+vim.cmd.colorscheme('terminal')
 
 -- See :help MiniAi-textobject-builtin
 require('mini.ai').setup({ n_lines = 500 })
