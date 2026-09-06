@@ -2,7 +2,7 @@
   description = "svin.nvim — personal Neovim config";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0";
     nixvim.url = "github:nix-community/nixvim/nixos-26.05";
   };
 

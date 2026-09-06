@@ -187,7 +187,8 @@ require('which-key').setup({
 })
 
 require('which-key').add({
-	{ '<leader>f', group = 'Fuzzy Find' },
+	-- Matches <leader>s* telescope maps
+	{ '<leader>s', group = 'Search' },
 	{ '<leader>b', group = 'Buffer' },
 	{ '<leader>l', group = 'LSP' },
 	{ '<leader>d', group = 'Diagnostics' },

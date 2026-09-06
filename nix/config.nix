@@ -8,7 +8,8 @@
     tabstop = 2;
     shiftwidth = 2;
     showmode = false;
-    termguicolors = true;
+    # Inherit terminal ANSI palette with colors/terminal.lua (Neovide overrides below).
+    termguicolors = false;
     updatetime = 250;
     timeoutlen = 300;
     signcolumn = "yes";
@@ -16,6 +17,7 @@
     mouse = "a";
     clipboard = "unnamedplus";
 
+    # Greek keyboard → Latin for normal-mode commands (Nix/desktop convenience).
     langmap = "ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,WW,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz";
     langnoremap = true;
     guifont = "JetBrainsMono Nerd Font:h10";
@@ -36,25 +38,10 @@
     neovide_cursor_smooth_blink = false;
   };
 
+  # Custom 16-color scheme from the Lua config (cterm 0–15).
+  extraFiles."colors/terminal.lua".source = ../colors/terminal.lua;
+
   keymaps = [
-    {
-      mode = [
-        "n"
-        "x"
-      ];
-      key = "gy";
-      action = "\"+y";
-      options.desc = "Copy to clipboard";
-    }
-    {
-      mode = [
-        "n"
-        "x"
-      ];
-      key = "gp";
-      action = "\"+p";
-      options.desc = "Paste clipboard content";
-    }
     {
       mode = "n";
       key = "<leader>bc";
@@ -193,13 +180,13 @@
           };
           menu = {
             draw = {
-              columns = [
-                [
-                  "label"
-                  "label_description"
-                ]
-                [ "kind" ]
-              ];
+              # Match Lua: { 'label', 'label_description', gap = 1 }, { 'kind' }
+              columns.__raw = ''
+                {
+                  { "label", "label_description", gap = 1 },
+                  { "kind" },
+                }
+              '';
             };
           };
         };
@@ -214,6 +201,7 @@
         vimdoc
         c
         query
+        nix
       ];
       settings.highlight.enable = true;
     };
@@ -223,6 +211,7 @@
       servers = {
         lua_ls = {
           enable = true;
+          # Richer than the empty Lua={} in init.lua; mirrors .luarc.json.
           settings = {
             Lua = {
               runtime = {
@@ -258,12 +247,14 @@
           settings = {
             nil = {
               formatting = {
+                # Prefer nixfmt (nixpkgs-fmt is deprecated).
                 command = [ "nixfmt" ];
               };
             };
           };
         };
 
+        # Odin — Nix-only addition (not in the Lua/mason list).
         ols = {
           enable = true;
         };
@@ -279,6 +270,7 @@
         function(event)
           local opts = { buffer = event.buf }
 
+          -- Defaults after Neovim v0.11 (kept for compatibility)
           vim.keymap.set('n', 'grr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
           vim.keymap.set('n', 'gri', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
           vim.keymap.set('n', 'grt', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
@@ -287,6 +279,7 @@
           vim.keymap.set('n', 'gO', '<cmd>lua vim.lsp.buf.document_symbol()<cr>', opts)
           vim.keymap.set({ 'i', 's' }, '<C-s>', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
 
+          -- Custom
           vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
           vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
           vim.keymap.set('n', 'grd', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
@@ -317,10 +310,18 @@
   ];
 
   extraConfigLua = ''
-    vim.cmd.colorscheme('habamax')
+    -- Terminal: 16-color ANSI scheme. Neovide: truecolor + habamax.
+    if vim.g.neovide then
+      vim.o.termguicolors = true
+      vim.cmd.colorscheme('habamax')
+    else
+      vim.o.termguicolors = false
+      vim.cmd.colorscheme('terminal')
+    end
 
     require('which-key').add({
-      { '<leader>f', group = 'Fuzzy Find' },
+      -- Matches <leader>s* telescope maps (was incorrectly labelled <leader>f).
+      { '<leader>s', group = 'Search' },
       { '<leader>b', group = 'Buffer' },
       { '<leader>l', group = 'LSP' },
       { '<leader>d', group = 'Diagnostics' },
