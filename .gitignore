@@ -1,1 +1,4 @@
 .nvimlog
+result
+result-*
+.direnv
